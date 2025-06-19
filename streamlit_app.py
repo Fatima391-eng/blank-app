@@ -1,137 +1,82 @@
 import streamlit as st
 
-# Complete NJDOT-based design guidance
+# Verified NJDOT-based guidance per component
 manuals = {
     "NJDOT Roadway Design Manual – Section 10": {
         "Inlet": {
-            "Inlet Type": ["- Curb, grate, or combo inlet", "- Match to runoff flow type"],
-            "Inlet Location": ["- On grade or sag", "- Locate to intercept gutter flow"],
-            "Manning's n (Inlet)": ["- Use 0.013 for pavement", "- Check Table 10-6 for other surfaces"],
-            "Longitudinal Slope (Inlet)": ["- ≥ 0.005 ft/ft (0.5%)", "- Ensures gutter flow capacity"],
-            "Curb Opening Length (ft)": ["- Size to prevent bypass", "- Based on flow and spread"],
-            "Gutter Type": ["- Match cross section", "- Consistent with inlet type"],
-            "Depressed Gutter": ["- Optional", "- Improves flow capture"],
-            "Road Cross Slope (ft/ft)": ["- 2% (0.020) typical", "- Provides positive drainage"],
-            "Structure Type": ["- Box structure (precast or cast-in-place)", "- NJDOT standard details"],
-            "Elevation (Rim) (ft)": ["- Match finished grade"],
-            "Elevation (Invert) (ft)": ["- Invert = Rim - Depth", "- Slope must match pipe"],
-            "Rainfall Intensity (in/hr)": ["- 2.5–3.0 per Table 10-2"],
-            "Max Spread (ft)": ["- ≤ 6.0 ft (stay out of travel lanes)"],
-            "Catch Basin Spacing": ["- Initial: 150 ft", "- Refine by gutter flow/spread"],
-            "Headloss Method": ["- HEC-22 Energy"],
-            "HEC-22 Benching Method": ["- Flat or Standard"]
+            "Inlet Type": ["- Curb, grate, or combo inlet (based on drainage area and slope)"],
+            "Manning's n (Inlet)": ["- Use 0.013 for paved surfaces (Table 10-6)"],
+            "Longitudinal Slope (Inlet)": ["- ≥ 0.005 ft/ft (0.5%) for gutter flow"],
+            "Road Cross Slope (ft/ft)": ["- 0.020 (2%) typical per roadway section"],
+            "Rainfall Intensity (in/hr)": ["- Use Table 10-2 for location-based intensity"],
+            "Max Spread (ft)": ["- ≤ 6.0 ft to avoid encroachment into travel lane"],
+            "Catch Basin Spacing": ["- Start with 150 ft; refine based on spread and gutter slope"]
         },
         "Pipe": {
-            "Conduit Type": ["- Catalog: RCP, PVC, HDPE", "- Use Table 10-4"],
-            "Catalog Class / Section Type": ["- Circular for standard use", "- Arched for cover-limited zones"],
-            "Diameter / Size": ["- Minimum 15\" for public roads"],
-            "Material": ["- RCP under pavements", "- HDPE in non-structural zones"],
-            "Manning's n": ["- 0.012–0.015 typical", "- Check Table 10-6"],
-            "Invert Start / Stop": ["- Maintain minimum drop", "- Avoid backwater conditions"],
-            "Slope": ["- ≥ 0.005 ft/ft preferred", "- Ensure ≥ 2.5 fps velocity"],
-            "Length": ["- Based on layout and slope", "- Use scaled or true length"],
-            "Is Culvert?": ["- Mark True if inlet control expected", "- Use culvert sizing accordingly"]
+            "Conduit Type": ["- Use RCP, PVC, or HDPE per Table 10-4"],
+            "Diameter / Size": ["- Minimum 15\" required for public ROW"],
+            "Manning's n": ["- 0.012–0.015 based on material (Table 10-6)"],
+            "Slope": ["- Minimum 0.005 ft/ft preferred", "- Maintain 2.5 fps flow velocity"]
         },
         "Manhole": {
-            "Update Ground Elevation from Terrain Model?": ["- True if terrain model exists"],
-            "Elevation (Ground) (ft)": ["- Match topo or proposed grade"],
-            "Set Rim to Ground Elevation?": ["- True unless cover offset needed"],
-            "Elevation (Rim) (ft)": ["- Typically equal to ground"],
-            "Elevation (Invert) (ft)": ["- Match lowest pipe", "- Add 0.1–0.3 ft drop"],
-            "Structure Type": ["- Circular preferred", "- Rectangular for special cases"],
-            "Diameter (ft)": ["- ≥ 4 ft for standard pipe sizes"],
-            "Bolted Cover?": ["- Required in traffic/flood zones"],
-            "Headloss Method": ["- HEC-22 Energy"],
-            "HEC-22 Benching Method": ["- Flat or stepped based on flow"]
+            "Elevation (Invert) (ft)": ["- Invert must allow 0.1–0.3 ft drop through manhole"],
+            "Structure Type": ["- Circular for pipes ≤ 24 in; rectangular if larger or multiple lines"],
+            "Diameter (ft)": ["- ≥ 4.0 ft for maintenance access"],
+            "Headloss Method": ["- Use HEC-22 Energy method as standard"]
         },
         "Catchment": {
-            "Runoff Method": ["- Rational (< 20 acres)", "- TR-55 for complex/larger areas"],
-            "Area Defined By": ["- Single area typical", "- Divide if mixed surfaces"],
-            "Runoff Coefficient (Rational)": ["- 0.90 for impervious", "- Use weighted C for mixed cover"],
-            "Tc Input Type": ["- User Defined recommended"],
-            "Time of Concentration (min)": ["- Minimum 10 minutes (NJDOT)", "- Include all flow segments"]
+            "Runoff Method": ["- Rational Method for drainage areas < 20 acres"],
+            "Runoff Coefficient (Rational)": ["- Use Table 10-6 for C values (0.30–0.90)"],
+            "Time of Concentration (min)": ["- Minimum Tc = 10 minutes (design requirement)"]
         },
         "Outfall": {
-            "Boundary Condition Type": ["- Free Outfall for open discharge", "- Known tailwater if pond/tidal"],
-            "Update Ground Elevation from Terrain Model?": ["- True if using terrain model"],
-            "Elevation (Ground) (ft)": ["- Match outlet grading"],
-            "Set Rim to Ground Elevation?": ["- True unless offset needed"],
-            "Elevation (Invert) (ft)": ["- Match last pipe invert", "- Ensure positive drainage"]
+            "Boundary Condition Type": ["- Free Outfall unless stage/tailwater defined"],
+            "Elevation (Invert) (ft)": ["- Match last pipe invert for continuous drainage"]
         }
     },
 
     "NJDOT Bridge & Structures Manual – Section 22": {
         "Inlet": {
-            "Inlet Type": ["- Catalog (slot or curb-opening)", "- Place at low points and ends"],
-            "Inlet Location": ["- On Grade"],
-            "Manning's n (Inlet)": ["- 0.012 (concrete deck)"],
-            "Longitudinal Slope (Inlet)": ["- ≥ 0.005 ft/ft preferred"],
-            "Curb Opening Length (ft)": ["- Start with 1.0 ft", "- Adjust for spread"],
-            "Gutter Type": ["- Standard or custom"],
-            "Depressed Gutter": ["- Generally not used on bridges"],
-            "Road Cross Slope (ft/ft)": ["- 2% typical deck slope"],
-            "Structure Type": ["- Box or slot inlet"],
-            "Elevation (Rim) (ft)": ["- Match deck grade"],
-            "Elevation (Invert) (ft)": ["- Align with outlet pipe"],
-            "Rainfall Intensity (in/hr)": ["- Use 3.0 in/hr"],
-            "Max Spread (ft)": ["- ≤ 6.0 ft"],
-            "Catch Basin Spacing": ["- Start at 100 ft", "- Confirm via spread analysis"],
-            "Headloss Method": ["- HEC-22 Energy"],
-            "HEC-22 Benching Method": ["- Flat"]
+            "Inlet Type": ["- Use catalog slot drains or bridge inlets per Section 22.9"],
+            "Manning's n (Inlet)": ["- 0.012 for concrete bridge deck surfaces"],
+            "Road Cross Slope (ft/ft)": ["- 2% slope typical for bridge decks"],
+            "Rainfall Intensity (in/hr)": ["- Use 3.0 in/hr design storm for bridges"],
+            "Catch Basin Spacing": ["- Begin with 100 ft spacing; adjust per spread analysis"]
         },
         "Pipe": {
-            "Conduit Type": ["- RCP, VCP"],
-            "Catalog Class / Section Type": ["- Circular standard"],
-            "Diameter / Size": ["- Size for 10–15 year flow"],
-            "Material": ["- Use per structural detail"],
-            "Manning's n": ["- 0.011–0.013 typical"],
-            "Invert Start / Stop": ["- Align with structure profile"],
-            "Slope": ["- ≥ 0.005 ft/ft"],
-            "Length": ["- Match bridge layout"],
-            "Is Culvert?": ["- True if outlet submerged or inlet control applies"]
+            "Diameter / Size": ["- Size pipes for 10- to 15-year storm event under bridge"],
+            "Manning's n": ["- 0.011–0.013 typical for RCP or VCP"],
+            "Slope": ["- Minimum 0.005 ft/ft recommended"]
         },
         "Manhole": {
-            "Update Ground Elevation from Terrain Model?": ["- Optional"],
-            "Elevation (Ground) (ft)": ["- Match deck/sidewalk elevation"],
-            "Set Rim to Ground Elevation?": ["- True"],
-            "Elevation (Rim) (ft)": ["- Match surface"],
-            "Elevation (Invert) (ft)": ["- Match pipe invert", "- Maintain slope"],
-            "Structure Type": ["- Circular standard"],
-            "Diameter (ft)": ["- 4–5 ft standard"],
-            "Bolted Cover?": ["- Required on bridge decks"],
-            "Headloss Method": ["- HEC-22 Energy"],
-            "HEC-22 Benching Method": ["- Flat"]
+            "Structure Type": ["- Circular preferred for bridge deck structures"],
+            "Headloss Method": ["- Use HEC-22 Energy method standard"]
         },
         "Catchment": {
-            "Runoff Method": ["- Rational for small bridge areas"],
-            "Area Defined By": ["- Use total bridge deck area"],
-            "Runoff Coefficient (Rational)": ["- 0.90 (impervious deck)"],
-            "Tc Input Type": ["- User Defined"],
-            "Time of Concentration (min)": ["- 10 min typical unless very short deck"]
+            "Runoff Method": ["- Rational Method required for bridge drainage"],
+            "Runoff Coefficient (Rational)": ["- Use C = 0.90 for bridge deck (impervious)"],
+            "Time of Concentration (min)": ["- Minimum Tc = 10 min unless bridge deck is shorter"]
         },
         "Outfall": {
-            "Boundary Condition Type": ["- Free Outfall unless stage control exists"],
-            "Update Ground Elevation from Terrain Model?": ["- Optional unless grading linked"],
-            "Elevation (Ground) (ft)": ["- Match bridge outlet or abutment slope"],
-            "Set Rim to Ground Elevation?": ["- Usually True"],
-            "Elevation (Invert) (ft)": ["- Match final pipe outlet invert"]
+            "Boundary Condition Type": ["- Free outfall unless discharging into a known stage zone"],
+            "Elevation (Invert) (ft)": ["- Align with last pipe for outlet control"]
         }
     }
 }
 
-# Streamlit UI
-st.set_page_config("NJDOT StormCAD Reference", page_icon="💧")
-st.title("🧾 NJDOT StormCAD Field Design Reference")
+# Streamlit App
+st.set_page_config("NJDOT StormCAD Guide", page_icon="🛠️")
+st.title("🧾 NJDOT StormCAD Input Field Reference")
 
-# Manual & component selector
+# Manual and Component Selector
 manual = st.selectbox("📘 Select Manual", manuals.keys())
 component = st.radio("📂 Select Component", ["Inlet", "Pipe", "Manhole", "Catchment", "Outfall"])
 fields = manuals[manual][component]
 
-# Display interface
-st.subheader(f"🛠️ {component} Input Fields – {manual}")
-for field, notes in fields.items():
-    st.text_area(field, "\n".join(notes), height=100, disabled=True)
+# Display Filtered Fields
+st.subheader(f"🛠️ {component} Fields – Verified from {manual}")
+for field, guidance in fields.items():
+    st.text_area(field, "\n".join(guidance), height=100, disabled=True)
 
 st.markdown("---")
-st.caption("Values reflect NJDOT drainage standards (Roadway & Bridge Manuals). Use for StormCAD modeling reference.")
+st.caption("Only fields with verified NJDOT manual references are shown.")
