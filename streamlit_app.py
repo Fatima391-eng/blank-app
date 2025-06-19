@@ -57,4 +57,3 @@ st.success(detail)
 
 st.markdown("---")
 st.caption("Based on NJDOT Roadway Design Manual – Section 10")
-
