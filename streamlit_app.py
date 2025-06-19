@@ -1,70 +1,70 @@
 import streamlit as st
 
-# Manual-based field guidance with page references
+# NJDOT manual guidance with page references (no citation tags)
 manuals = {
     "NJDOT Roadway Design Manual – Section 10": {
         "Catch Basin": {
             "Inlet Type": [
-                "- Curb, grate, or combination inlet per site need (Sec 10.6.1) (Page 10-43):contentReference[oaicite:0]{index=0}"
+                "- Curb, grate, or combination inlet per site need (Page 10-43)"
             ],
             "Manning's n (Inlet)": [
-                "- Use 0.013 for paved surfaces (Table 10-4) (Page 10-45):contentReference[oaicite:1]{index=1}"
+                "- Use 0.013 for paved surfaces (Page 10-45)"
             ],
             "Longitudinal Slope (Inlet)": [
-                "- Minimum slope = 0.005 ft/ft (Sec 10.6.1) (Page 10-44):contentReference[oaicite:2]{index=2}"
+                "- Minimum slope = 0.005 ft/ft (Page 10-44)"
             ],
             "Catch Basin Spacing": [
-                "- Initial spacing 150 ft; refine based on spread and slope (Sec 10.6.1) (Page 10-44):contentReference[oaicite:3]{index=3}"
+                "- Initial spacing 150 ft; refine based on spread and slope (Page 10-44)"
             ]
         },
         "Pipe Properties": {
             "Conduit Type": [
-                "- Use RCP, HDPE, or PVC per Table 10-3 (Page 10-44):contentReference[oaicite:4]{index=4}"
+                "- Use RCP, HDPE, or PVC per Table 10-3 (Page 10-44)"
             ],
             "Diameter / Size": [
-                "- Minimum diameter = 15\" (Sec 10.6.1) (Page 10-44):contentReference[oaicite:5]{index=5}"
+                "- Minimum diameter = 15\" (Page 10-44)"
             ],
             "Manning's n": [
-                "- 0.012–0.015 typical (Table 10-4) (Page 10-45):contentReference[oaicite:6]{index=6}"
+                "- 0.012–0.015 typical (Page 10-45)"
             ],
             "Slope": [
-                "- Preferred slope ≥ 0.005 ft/ft (Sec 10.6.1) (Page 10-44):contentReference[oaicite:7]{index=7}"
+                "- Preferred slope ≥ 0.005 ft/ft (Page 10-44)"
             ]
         },
         "Manhole Properties": {
             "Elevation (Invert) (ft)": [
-                "- Drop through manhole = 0.1–0.3 ft (Sec 10.6.1) (Page 10-44):contentReference[oaicite:8]{index=8}"
+                "- Drop through manhole = 0.1–0.3 ft (Page 10-44)"
             ],
             "Diameter (ft)": [
-                "- Minimum 4.0 ft for pipes ≤ 24\" (Sec 10.6.1) (Page 10-44):contentReference[oaicite:9]{index=9}"
+                "- Minimum 4.0 ft for pipes ≤ 24\" (Page 10-44)"
             ],
             "Structure Type": [
-                "- Use circular unless multiple connections (Sec 10.6.1) (Page 10-44):contentReference[oaicite:10]{index=10}"
+                "- Use circular unless multiple connections (Page 10-44)"
             ]
         },
         "Drainage Area Properties": {
             "Runoff Method": [
-                "- Rational Method for areas < 20 acres (Sec 10.5.1) (Page 10-17):contentReference[oaicite:11]{index=11}"
+                "- Rational Method for areas < 20 acres (Page 10-17)"
             ],
             "Runoff Coefficient (Rational)": [
-                "- Use Table 10-2 for C values: 0.3–0.9 (Page 10-19):contentReference[oaicite:12]{index=12}"
+                "- Use Table 10-2 for C values: 0.3–0.9 (Page 10-19)"
             ],
             "Time of Concentration (min)": [
-                "- Minimum Tc = 10 minutes (Sec 10.5.3) (Page 10-81):contentReference[oaicite:13]{index=13}"
+                "- Minimum Tc = 10 minutes (Page 10-81)"
             ]
         },
         "Outfall Properties": {
             "Outlet Protection": [
-                "- Required if velocity > allowable; use NJ Soil Erosion Manual (Sec 10.7.2) (Page 10-66):contentReference[oaicite:14]{index=14}"
+                "- Required if velocity > allowable; use NJ Soil Erosion Manual (Page 10-66)"
             ],
             "Boundary Condition Type": [
-                "- Assume free outfall unless tailwater elevation known (Sec 10.7.1) (Page 10-65):contentReference[oaicite:15]{index=15}"
+                "- Assume free outfall unless tailwater elevation known (Page 10-65)"
             ]
         }
     }
 }
 
-# Label mapping (for UI)
+# UI label mapping
 symbology_labels = {
     "Catch Basin": "Catch Basin",
     "Pipe Properties": "Pipe",
@@ -73,20 +73,20 @@ symbology_labels = {
     "Outfall Properties": "Outfall"
 }
 
-# Streamlit Setup
+# Streamlit App Setup
 st.set_page_config("StormCAD Manual Regulations", page_icon="🛠️")
 st.title("🧾 StormCAD Manual Regulations")
 
-# UI Controls
+# Manual & Element UI
 manual = st.selectbox("📘 Select Manual", manuals.keys())
 element_display = st.radio("📂 Select Element Symbology", list(symbology_labels.values()))
 element = next(k for k, v in symbology_labels.items() if v == element_display)
 fields = manuals[manual][element]
 
-# Display field guidance with citations
+# Display Guidance
 st.subheader(f"🛠️ {element} – {manual}")
-for field, notes in fields.items():
-    st.text_area(field, "\n".join(notes), height=100, disabled=True)
+for field, bullets in fields.items():
+    st.text_area(field, "\n".join(bullets), height=100, disabled=True)
 
 st.markdown("---")
-st.caption("All input fields are supported by NJDOT Section 10 references with page numbers.")
+st.caption("All input fields are supported by NJDOT Section 10 references. Page numbers shown in parentheses.")
