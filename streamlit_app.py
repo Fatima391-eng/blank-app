@@ -1,39 +1,39 @@
 import streamlit as st
 
-# Design rules mapped to specific components/tasks
-design_tasks = {
-    "Pipe": "Design for:\n- 15-year storm (Freeway)\n- 10-year storm (Service Highway)\nUse Rational Method for < 20 acres or TR-55 for < 5 sq mi.",
-    "Culvert – Interstate": "Design for 50-year storm (Table 10-2).\nAllowable water surface should not exceed road shoulder.",
-    "Culvert – Service Highway": "Design for 25-year storm.\nIf subject to NJDEP permitting, use 100-year storm instead.",
-    "Storm Sewer Inlet": "Design so that water remains 1 ft below grate or rim elevation during design storm.",
-    "Recharge Basin": "Must infiltrate the increase in runoff from the 2-year, 24-hour storm.\nUse site-specific infiltration rate and soil testing.",
-    "Outlet Structure": "Use:\n- Q = CA(2gH)^0.5 for orifice\n- Q = CLH^1.5 for weir\nDesign multi-stage outlets if required for different storm events.",
-    "Channel – Grassed": "Use where feasible to promote infiltration and reduce runoff velocity.\nEnsure slopes and soils are non-erodible under design flow.",
-    "Channel – Non-erodible": "Required where slopes are steep or high-velocity flows exist.\nUse riprap, gabions, or concrete lining as appropriate.",
-    "Storage Basin (Detention)": "Design to prevent increase in peak flows for 2-, 10-, 25-, and 100-year storms.\nVerify safe overflow and drawdown per NJDEP BMP Manual.",
-    "TSS Removal": "Stormwater management systems must remove 80% Total Suspended Solids (TSS).\nBioretention, sand filters, and wet ponds are acceptable.",
-    "Time of Concentration": "Minimum allowable Tc is 10 minutes.\nInclude components: sheet flow, shallow concentrated flow, channel/pipe flow.",
-    "Permitting Thresholds": "≥ 1 acre disturbed → NJDEP stormwater permit required.\n≥ 5,000 sq ft disturbed (non-NJDOT) → Soil Erosion permit via SCD.\nFloodplain or regulated water → NJDEP FHACA permit."
+# Manual sources
+manuals = {
+    "NJDOT Roadway Design Manual – Section 10": {
+        "Pipe": "Design for: 15-year storm (Freeway), 10-year storm (Service Hwy). Use Rational Method < 20 acres or TR-55 < 5 sq mi.",
+        "Culvert – Interstate": "Design for 50-year storm. Check allowable water surface elevation.",
+        "Recharge Basin": "Infiltrate volume from 2-year, 24-hour storm. Design with soil data.",
+        "Outlet Structure": "Use Q = CA(2gH)^0.5 for orifice or Q = CLH^1.5 for weir. Design multi-stage where needed.",
+        "Time of Concentration": "Minimum Tc = 10 minutes. Include sheet, shallow, pipe, and channel flow types.",
+        "Permitting Thresholds": ">= 1 acre disturbed → NJDEP permit. >= 5000 sq ft → Soil Erosion. Encroachments → FHACA or others."
+    },
+    "NJDOT Bridge & Structures Manual (2016)": {
+        "Deck Drainage": "Refer to Section 22. Provide inlets/downspouts to handle flow. Check cross slope and bridge end catch basins.",
+        "Culverts": "See Section 29. Follow hydraulic criteria for waterway sizing. Use precast or cast-in-place box sections.",
+        "Scour Protection": "Section 39. Required for piers and abutments in stream zones. Use riprap, cutoff walls, etc.",
+        "Environmental Permits": "Section 42. Know when NJDEP, USACE, or Pinelands permits apply. Includes Stream Encroachment, Wetlands, CAFRA, etc.",
+        "Integral Abutment Bridges": "Section 15. Hydraulics must be addressed if located near streams. Ensure no obstruction of flow or floodplain."
+    }
 }
 
-# App layout
-st.set_page_config(page_title="NJDOT Drainage Design Assistant", page_icon="📐")
-st.title("📐 NJDOT Drainage Design Assistant")
+# App config
+st.set_page_config(page_title="Drainage Design Requirement Lookup", page_icon="🌧️")
+st.title("🌧️ Drainage & Environmental Design Requirements Lookup")
 
-# Intro description
-st.markdown("""
-This tool is a condensed, task-focused reference based on the **NJDOT Roadway Design Manual – Section 10: Drainage Design**.  
-It summarizes essential design requirements — like storm frequencies, allowable elevations, outlet formulas, and permit triggers — organized by component, not by process.  
-Rather than walking through procedure, it helps engineers quickly check what standard they need to design to for a specific drainage element.  
-Ideal for real-world project workflows, it streamlines design decisions while ensuring NJDOT compliance.
-""")
+# Dropdown 1 – Select Manual
+selected_manual = st.selectbox("Select a Manual", list(manuals.keys()))
 
-# User input
-task = st.selectbox("What drainage element are you designing?", list(design_tasks.keys()))
+# Dropdown 2 – Select Design Topic
+topics = list(manuals[selected_manual].keys())
+selected_topic = st.selectbox("Select a Design Task or Topic", topics)
 
 # Output
-st.markdown("### Design Requirements:")
-st.success(design_tasks[task])
+st.markdown("### Design Guidance:")
+st.success(manuals[selected_manual][selected_topic])
 
 st.markdown("---")
-st.caption("Based on NJDOT Roadway Design Manual – Section 10")
+st.caption("Sources: NJDOT Design Manuals (Roadway & Structures)")
+
