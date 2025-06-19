@@ -28,4 +28,4 @@ data = {
         "NJDEP FHACA Permit", "Soil Erosion & Sediment Control", "NJPDES Permit", "Pinelands/Highlands/CAFRA", "Category 1 Waters (C1)"
     ],
     "Details": [
-        "Gather map
+        "Gather map"
