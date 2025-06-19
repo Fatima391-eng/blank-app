@@ -1,61 +1,29 @@
 import streamlit as st
-import pandas as pd
 
-data = {
-    "Category": [
-        "Design Process Steps", "Design Process Steps", "Design Process Steps", "Design Process Steps", "Design Process Steps", "Design Process Steps",
-        "Recurrence Interval", "Recurrence Interval", "Recurrence Interval", "Recurrence Interval", "Recurrence Interval",
-        "Hydrologic Methods", "Hydrologic Methods", "Hydrologic Methods",
-        "Stormwater Management", "Stormwater Management", "Stormwater Management", "Stormwater Management", "Stormwater Management",
-        "Allowable Water Surface Elevation", "Allowable Water Surface Elevation", "Allowable Water Surface Elevation", "Allowable Water Surface Elevation", "Allowable Water Surface Elevation",
-        "Drainage Permit Checklist", "Drainage Permit Checklist", "Drainage Permit Checklist", "Drainage Permit Checklist", "Drainage Permit Checklist", "Drainage Permit Checklist",
-        "Time of Concentration", "Time of Concentration",
-        "Channel Design", "Channel Design", "Channel Design",
-        "Stormwater Storage", "Stormwater Storage", "Stormwater Storage", "Stormwater Storage", "Stormwater Storage",
-        "Permits & Regulatory Agencies", "Permits & Regulatory Agencies", "Permits & Regulatory Agencies", "Permits & Regulatory Agencies", "Permits & Regulatory Agencies"
-    ],
-    "Item": [
-        "Preliminary Investigation", "Site Analysis", "Choose Recurrence Interval", "Hydrologic Analysis", "Hydraulic Design", "Environmental Review",
-        "Freeway/Interstate Cross Drain", "Service Highway Cross Drain", "Longitudinal Pipe – Freeway", "Longitudinal Pipe – Service Hwy", "NJDEP Permit Area",
-        "< 20 acres", "< 5 sq mi", "> 1 acre",
-        "Water Quantity", "Water Quality", "Recharge", "Nonstructural BMPs First", "Permit Required?",
-        "Residence", "Culvert (new)", "Culvert (existing)", "Channel", "Storm Sewer Grate/Rim",
-        "Existing Pipes Cleaned", "No Watershed Diversion", "Outfall Protection", "BMPs on Developer Property", "Drainage Calcs Submitted", "ROW and Inlets Shown",
-        "Minimum Tc = 10 mins", "Flow Types (sheet, gutter, pipe, channel)",
-        "Grassed Channel", "Non-erodible Channel", "Permitting Considerations",
-        "Detention Basin", "Retention Basin", "Outlet Design (Weir/Orifice)", "Modeling Tools", "Design Tip",
-        "NJDEP FHACA Permit", "Soil Erosion & Sediment Control", "NJPDES Permit", "Pinelands/Highlands/CAFRA", "Category 1 Waters (C1)"
-    ],
-    "Details": [
-        "Gather maps, drainage, topo, permits", "Assess drainage area, stream, soils, permits", "Use Table 10-2 to select interval", "Use Rational, TR-55, or TR-20", "Storm drains, culverts, channels", "Assess TSS, recharge, quantity control",
-        "50-year", "25-year", "15-year", "10-year", "100-year",
-        "Use Rational Method", "Use TR-55", "Use TR-20, HEC-HMS",
-        "If > 0.25 ac. impervious", "80% TSS Removal", "Infiltrate 2-yr storm volume increase", "Use unless not feasible", "If ≥ 1 acre disturbed",
-        "Basement floor/window elevation", "Top of new culvert", "Outside road edge", "1 ft below top of bank", "1 ft below grate/rim",
-        "System must be clear and functional", "Don’t redirect flow to another watershed", "Show stone size, width, length", "Onsite and with maintenance plan", "2-, 10-, 25-, 100-year storms shown", "Show all ROW, pipes, inlets",
-        "Sum of travel times ≥ 10 min", "Sheet, gutter, pipe, open channel",
-        "Preferred type where feasible", "Use in erosive or steep slopes", "Check floodplain or C1 permit needs",
-        "Temporary storage, drains after storm", "Permanent pool of water", "Q=CA(2gH)^0.5 or Q=CLH^1.5", "Use HEC-1, TR-20, Pond-2", "Use multi-stage outlets if needed",
-        "Needed if encroaching streams/floodplain", "≥ 5,000 sq ft disturbed (non-NJDOT only)", "≥ 1 acre disturbed", "Check project location", "300-ft buffer unless previously disturbed"
-    ]
+# Define design requirements by task/component
+design_tasks = {
+    "Pipe": "Design for:\n- 15-year storm (Freeway)\n- 10-year storm (Service Highway)\nUse Rational Method for < 20 acres or TR-55 for < 5 sq mi.",
+    "Culvert – Interstate": "Design for 50-year storm (Table 10-2).\nConsider allowable water surface elevation at road edge.",
+    "Culvert – Service Highway": "Design for 25-year storm.\nCheck for NJDEP permit area → use 100-year storm.",
+    "Storm Sewer Inlet": "Water must be 1 ft below grate or rim elevation under design storm.",
+    "Recharge Basin": "Must infiltrate increase in 2-year, 24-hour storm volume.\nUse site-specific soil data.",
+    "Outlet Structure": "Use:\n- Q = CA(2gH)^0.5 for orifice\n- Q = CLH^1.5 for weir\nDesign for multi-stage release when needed.",
+    "Channel – Grassed": "Preferred type where feasible.\nCheck slope, soil erodibility.",
+    "Channel – Non-erodible": "Use on steep grades or where erosion is likely.\nLine with riprap, concrete, or gabion.",
+    "Storage Basin (Detention)": "Design to prevent increase in peak flow for 2-, 10-, 25-, and 100-year storms.",
+    "TSS Removal": "Design BMPs to remove 80% Total Suspended Solids.\nUse bioretention, filters, or wet ponds.",
+    "Time of Concentration": "Minimum Tc = 10 minutes.\nUse travel time components: sheet flow, shallow flow, channel, pipe.",
+    "Permitting Thresholds": "≥ 1 acre disturbed → NJDEP stormwater permit.\n≥ 5,000 sq ft disturbed (non-NJDOT) → Soil Erosion permit.\nFloodplain or water encroachment → NJDEP FHACA permit."
 }
 
-# Build DataFrame
-df = pd.DataFrame(data)
+# Streamlit app UI
+st.set_page_config(page_title="NJDOT Drainage Design Rules", page_icon="📐")
+st.title("📐 NJDOT Drainage Design Assistant")
 
-# App UI
-st.set_page_config(page_title="NJ Drainage Tool", page_icon="💧")
-st.title("💧 NJ Drainage Design Lookup Tool")
-
-# Dropdowns
-category = st.selectbox("1. Choose a Category", sorted(df["Category"].unique()))
-filtered = df[df["Category"] == category]
-item = st.selectbox("2. Choose an Item", filtered["Item"])
-detail = filtered[filtered["Item"] == item]["Details"].values[0]
-
-# Output
-st.markdown("### 3. Design Guidance:")
-st.success(detail)
+task = st.selectbox("What are you designing?", list(design_tasks.keys()))
+st.markdown("### Design Requirements:")
+st.success(design_tasks[task])
 
 st.markdown("---")
-st.caption("Based on NJDOT Roadway Design Manual – Section 10")
+st.caption("Based on NJDOT Design Manual – Section 10")
+
