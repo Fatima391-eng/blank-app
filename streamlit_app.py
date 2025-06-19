@@ -1,27 +1,45 @@
 import streamlit as st
 
-# Manual sources
+# Updated manuals with StormCAD-relevant design inputs
 manuals = {
     "NJDOT Roadway Design Manual – Section 10": {
-        "Pipe": "Design for: 15-year storm (Freeway), 10-year storm (Service Hwy). Use Rational Method < 20 acres or TR-55 < 5 sq mi.",
-        "Culvert – Interstate": "Design for 50-year storm. Check allowable water surface elevation.",
-        "Recharge Basin": "Infiltrate volume from 2-year, 24-hour storm. Design with soil data.",
-        "Outlet Structure": "Use Q = CA(2gH)^0.5 for orifice or Q = CLH^1.5 for weir. Design multi-stage where needed.",
-        "Time of Concentration": "Minimum Tc = 10 minutes. Include sheet, shallow, pipe, and channel flow types.",
-        "Permitting Thresholds": ">= 1 acre disturbed → NJDEP permit. >= 5000 sq ft → Soil Erosion. Encroachments → FHACA or others."
+        "Pipe Design": "Use 10-year storm for service roads, 15-year for freeways. Rational method for < 20 ac, TR-55 for < 5 sq mi.",
+        "Time of Concentration": "Minimum Tc = 10 minutes. Combine flow segments: sheet, shallow, pipe, and channel.",
+        "Outlet Structure": "Use:\n- Q = CA(2gH)^0.5 for orifice\n- Q = CLH^1.5 for weir\nDesign for multi-stage release when needed.",
+        "Quantity Control": "Must not exceed pre-development peak flow for 2-, 10-, 25-, and 100-year events.",
+        "Culvert Sizing": "25-year storm for service roads, 50-year for interstate. Design for no overtopping at design flow."
     },
-    "NJDOT Bridge & Structures Manual (2016)": {
-        "Deck Drainage": "Refer to Section 22. Provide inlets/downspouts to handle flow. Check cross slope and bridge end catch basins.",
-        "Culverts": "See Section 29. Follow hydraulic criteria for waterway sizing. Use precast or cast-in-place box sections.",
-        "Scour Protection": "Section 39. Required for piers and abutments in stream zones. Use riprap, cutoff walls, etc.",
-        "Environmental Permits": "Section 42. Know when NJDEP, USACE, or Pinelands permits apply. Includes Stream Encroachment, Wetlands, CAFRA, etc.",
-        "Integral Abutment Bridges": "Section 15. Hydraulics must be addressed if located near streams. Ensure no obstruction of flow or floodplain."
+    "NJDOT Bridge & Structures Manual – Section 22": {
+        "Bridge Deck Drainage (StormCAD Input)": (
+            "- **Rational C**: Use 0.9 for impervious bridge deck\n"
+            "- **Rainfall Intensity**: Use 3 in/hr for inlet spacing\n"
+            "- **Max Spread at Curb**: ≤ 6 ft\n"
+            "- **Cross Slope**: 2% (typical)\n"
+            "- **Longitudinal Slope**: Prefer 0.5% min\n"
+            "- **Inlet Type**: Curb opening inlets at low points\n"
+            "- **Outlet Slope**: Follow pipe diameter guidelines\n"
+        ),
+        "Gutter Flow Analysis": (
+            "Calculate gutter flow width using cross slope, longitudinal slope, and intensity.\n"
+            "Use standard equations built into StormCAD or CivilStorm.\n"
+            "Ensure spread ≤ 6 ft in all locations."
+        ),
+        "Catch Basin Placement": (
+            "Place catch basins near bridge ends, sag points, and crown transitions.\n"
+            "Spacing depends on flow, slope, and deck geometry — start with max 100 ft and refine with model."
+        )
     }
 }
 
 # App config
 st.set_page_config(page_title="Drainage Design Requirement Lookup", page_icon="🌧️")
 st.title("🌧️ Drainage & Environmental Design Requirements Lookup")
+
+# Description block
+st.markdown("""
+This tool provides task-based drainage and stormwater design guidance for NJDOT projects.  
+It extracts key requirements from Section 10 (Roadway Design) and Section 22 (Bridge & Structures) relevant to drainage modeling, StormCAD setup, and permitting thresholds.
+""")
 
 # Dropdown 1 – Select Manual
 selected_manual = st.selectbox("Select a Manual", list(manuals.keys()))
@@ -35,5 +53,5 @@ st.markdown("### Design Guidance:")
 st.success(manuals[selected_manual][selected_topic])
 
 st.markdown("---")
-st.caption("Sources: NJDOT Design Manuals (Roadway & Structures)")
+st.caption("Sources: NJDOT Design Manuals – Roadway Section 10 and Structures Section 22")
 
