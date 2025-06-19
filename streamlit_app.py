@@ -1,6 +1,6 @@
 import streamlit as st
 
-# Verified manual design guidance by element
+# Verified guidance from design manuals
 manuals = {
     "NJDOT Roadway Design Manual – Section 10": {
         "Catch Basin": {
@@ -95,23 +95,33 @@ manuals = {
     }
 }
 
-# Streamlit Setup
+# Mapping for user-friendly display of element names
+symbology_labels = {
+    "Catch Basin": "Catch Basin",
+    "Pipe Properties": "Pipe",
+    "Manhole Properties": "Manhole",
+    "Drainage Area Properties": "Drainage Area",
+    "Outfall Properties": "Outfall"
+}
+
+# Streamlit setup
 st.set_page_config("StormCAD Manual Regulations", page_icon="🛠️")
 st.title("🧾 StormCAD Manual Regulations")
 
 # Manual & Element Selection
 manual = st.selectbox("📘 Select Manual", manuals.keys())
-element = st.radio("📂 Select Element Symbology", list(manuals[manual].keys()))
+element_display = st.radio("📂 Select Element Symbology", list(symbology_labels.values()))
+element = next(k for k, v in symbology_labels.items() if v == element_display)
 fields = manuals[manual][element]
 
-# Clarifier for HDS-4
+# Clarifier if HDS-4 is selected
 if "HDS-4" in manual:
     st.info("🔎 Note: HDS-4 is a federal FHWA guide. Always confirm with NJDOT for use on NJ projects.")
 
-# Field display
+# Field guidance display
 st.subheader(f"🛠️ {element} – {manual}")
-for field, guidance in fields.items():
-    st.text_area(field, "\n".join(guidance), height=100, disabled=True)
+for field, notes in fields.items():
+    st.text_area(field, "\n".join(notes), height=100, disabled=True)
 
 st.markdown("---")
 st.caption("Only StormCAD input fields with verified references in NJDOT or FHWA manuals are included.")
