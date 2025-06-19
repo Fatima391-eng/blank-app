@@ -27,5 +27,5 @@ data = {
         "Detention Basin", "Retention Basin", "Outlet Design (Weir/Orifice)", "Modeling Tools", "Design Tip",
         "NJDEP FHACA Permit", "Soil Erosion & Sediment Control", "NJPDES Permit", "Pinelands/Highlands/CAFRA", "Category 1 Waters (C1)"
     ],
-    "Details": [
+    "Details": []
         "Gather map"
