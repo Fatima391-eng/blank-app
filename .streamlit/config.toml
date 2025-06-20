@@ -1,0 +1,6 @@
+[theme]
+primaryColor = "#2F80ED"                    # soft blue (buttons, highlights)
+backgroundColor = "#FFFFF0"                 # ivory background
+secondaryBackgroundColor = "#F5F5F5"        # light gray sidebar
+textColor = "#222222"                       # nearly black text
+font = "sans serif"
